@@ -15,7 +15,7 @@ fn main() {
     }
 
     let mut input = BufReader::new(File::open(args().nth(1).unwrap()).unwrap()); //Open the file and create a buffered reader
-    let output = File::create(args().nth(2).unwrap().unwrap()).unwrap(); //Create the output file
+    let output = File::create(args().nth(2).unwrap()).unwrap(); //Create the output file
     let mut encoder = GzEncoder::new(output, Compression::default()); //Create a new GzEncoder with the output file and default compression level
     let start = Instant::now();
 
@@ -24,8 +24,8 @@ fn main() {
 
     println!(
         "Source length : {:?}",
-        input.get_ref().matadata().unwrap().len()
+        input.get_ref().metadata().unwrap().len()
     );
-    print!("Target length : {:?}", output.metadata().unwrap().len());
+    println!("Target length : {:?}", output.metadata().unwrap().len());
     println!("Elasped Time : {:?}", start.elapsed()); //Print the elapsed time
 }
