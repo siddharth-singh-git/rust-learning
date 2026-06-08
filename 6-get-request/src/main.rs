@@ -2,7 +2,7 @@ use std::error::Error;
 use std::io::Read;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let mut res = reqwest::blocking::get("http://httpbin.org/get")?;
+    let mut res = reqwest::blocking::get("https://httpbin.org/get")?;
     let mut body = String::new();
     res.read_to_string(&mut body)?;
 
