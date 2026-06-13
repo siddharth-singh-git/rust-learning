@@ -33,7 +33,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!("Goodbye!");
             break;
         }
-        let sp = Spinner::new(&Spinners::Dots12, "\t\tOpenAI is Thinking...".into()); // spinner from spinners crate that displays "Thinking..." next to a spinner
+        let sp = Spinner::new(&Spinners::Dots12, "\t\tYour Assistant is Thinking...".into()); // spinner from spinners crate that displays "Thinking..." next to a spinner
 
         let response = client
             .generate_content()
