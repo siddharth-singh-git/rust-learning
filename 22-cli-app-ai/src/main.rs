@@ -15,7 +15,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Create a Gemini client with default settings (Gemini 2.5 Flash)
     let client = Gemini::with_model(api_key, Model::Gemini3Flash)?;
 
-    let preamble = "Generate a Sql code for the given statement."; // preamble for the prompt
+    let preamble = "Generate a Sql code for the given statement. Only give the sql code . Avoid any explanaiton of not asked. Just give the SQL code.  Return ONLY the SQL query. No explanation, no markdown, no code fences, no extra text."; // preamble for the prompt
 
     // Send a prompt to the model (e.g., gemini-2.5-flash)
 
@@ -29,6 +29,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         stdin().read_line(&mut user_text).expect("Failed to read");
         println!("");
 
+        if user_text.trim().eq_ignore_ascii_case("exit") {
+            println!("Goodbye!");
+            break;
+        }
         let sp = Spinner::new(&Spinners::Dots12, "\t\tOpenAI is Thinking...".into()); // spinner from spinners crate that displays "Thinking..." next to a spinner
 
         let response = client
