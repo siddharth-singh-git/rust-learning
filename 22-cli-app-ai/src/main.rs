@@ -1,7 +1,10 @@
 use dotenv::dotenv;
 use gemini_rust::Gemini;
 use gemini_rust::Model;
+use spinners::{Spinner, Spinners};
 use std::env;
+use std::io::stdin;
+use std::io::{Write, stdout};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -12,15 +15,39 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Create a Gemini client with default settings (Gemini 2.5 Flash)
     let client = Gemini::with_model(api_key, Model::Gemini3Flash)?;
 
-    // Send a prompt to the model (e.g., gemini-2.5-flash)
-    let response = client
-        .generate_content()
-        .with_system_prompt("You are a helpful assistant specializing in Rust programming.")
-        .with_user_message("What makes Rust a good choice for systems programming?")
-        .execute()
-        .await?;
+    let preamble = "Generate a Sql code for the given statement."; // preamble for the prompt
 
-    println!("Response: {}", response.text());
+    // Send a prompt to the model (e.g., gemini-2.5-flash)
+
+    println!("{esc}c", esc = 27 as char);
+
+    loop {
+        print!("> "); // println flushes it, print doesn't
+        stdout().flush().unwrap(); // flush stdout
+        let mut user_text = String::new();
+
+        stdin().read_line(&mut user_text).expect("Failed to read");
+        println!("");
+
+        let sp = Spinner::new(&Spinners::Dots12, "\t\tOpenAI is Thinking...".into()); // spinner from spinners crate that displays "Thinking..." next to a spinner
+
+        let response = client
+            .generate_content()
+            .with_system_prompt(preamble)
+            .with_user_message(user_text)
+            .with_max_output_tokens(1024)
+            .execute()
+            .await?;
+
+        // we've got response by now, stop the spinner
+
+        // stopping the spinner
+        sp.stop();
+
+        println!(""); // println!: same as print! but a newline is appended.
+
+        println!("Response: {}", response.text());
+    }
 
     Ok(())
 }
